@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Không Thời Vạn Tượng — Grimoire of Spacetime</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        galaxy: {
+                            900: '#030712',
+                            800: '#0b0f19',
+                            700: '#111827',
+                            600: '#1e293b',
+                            accent: '#38bdf8',
+                            silver: '#e2e8f0',
+                            glow: '#818cf8'
+                        }
+                    },
+                    fontFamily: {
+                        title: ['Cinzel', 'serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Background & Ambient Effects */
+        body {
+            background-color: #030712;
+            color: #e2e8f0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Starfield & Nebula Background */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse at top, rgba(30, 58, 138, 0.25), transparent 70%),
+                radial-gradient(ellipse at bottom, rgba(88, 28, 135, 0.2), transparent 70%);
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.12);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .glass-nav {
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.1);
+        }
+
+        /* Magical Glowing Text */
+        .magic-text {
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .magic-glow {
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+        }
+
+        /* Tier Badges Colors */
+        .badge-d { background: rgba(59, 130, 246, 0.15); border: 1px solid #3b82f6; color: #93c5fd; }
+        .badge-c { background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #6ee7b7; }
+        .badge-b { background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fde047; }
+        .badge-a { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; }
+        .badge-s { 
+            background: rgba(168, 85, 247, 0.2); 
+            border: 1px solid #a855f7; 
+            color: #e9d5ff;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(226, 232, 240, 0.1);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+
+        /* Star Animation */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 3s) infinite ease-in-out var(--delay, 0s);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen pb-20 selection:bg-sky-500 selection:text-white">
+
+    <!-- Starfield Canvas/Container -->
+    <div class="stars-container" id="stars-container"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full border border-sky-400/30 flex items-center justify-center bg-sky-950/40 text-sky-400 text-lg shadow-[0_0_15px_rgba(56,189,248,0.2)]">
+                        <i class="fa-solid font-bold fa-compass"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-title text-xl font-bold tracking-wider magic-text">KHÔNG THỜI VẠN TƯỢNG</h1>
+                        <p class="text-xs text-slate-400 tracking-widest uppercase">Grimoire of Spacetime</p>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-6 text-sm">
+                    <a href="#overview" class="text-slate-300 hover:text-sky-400 transition-colors">Tổng Quan</a>
+                    <a href="#principles" class="text-slate-300 hover:text-sky-400 transition-colors">4 Nguyên Lý</a>
+                    <a href="#spells" class="text-slate-300 hover:text-sky-400 transition-colors">Chiêu Thức</a>
+                    <a href="#summary" class="text-slate-300 hover:text-sky-400 transition-colors">Phân Loại</a>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <span class="px-3 py-1 text-xs rounded-full bg-slate-800/80 text-sky-300 border border-sky-500/20 font-mono">
+                        <i class="fa-solid fa-atom mr-1.5"></i> Không + Thời
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="overview" class="relative z-10 pt-16 pb-12 text-center px-4">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-500/10 border border-sky-400/20 text-sky-300 text-xs font-semibold tracking-widest uppercase">
+                <i class="fa-solid fa-book-bookmark text-xs"></i> Ma Pháp Hệ Tối Tượng
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl font-title font-extrabold tracking-tight magic-text leading-tight">
+                KHÔNG THỜI VẠN TƯỢNG
+            </h1>
+            <p class="text-lg sm:text-xl font-title text-slate-300 tracking-wider">GRIMOIRE OF SPACETIME</p>
+            
+            <!-- Attribute Tags -->
+            <div class="flex flex-wrap justify-center gap-3 pt-2">
+                <span class="px-4 py-1.5 rounded-lg glass-card text-xs text-slate-300 flex items-center gap-2">
+                    <span class="text-sky-400 font-semibold">Thuộc tính:</span> Không gian + Thời gian
+                </span>
+                <span class="px-4 py-1.5 rounded-lg glass-card text-xs text-slate-300 flex items-center gap-2">
+                    <span class="text-sky-400 font-semibold">Hệ màu:</span> Trắng · Xanh thiên hà · Bạc
+                </span>
+                <span class="px-4 py-1.5 rounded-lg glass-card text-xs text-slate-300 flex items-center gap-2">
+                    <span class="text-sky-400 font-semibold">Quy mô:</span> 17 chiêu thức · 5 cấp độ
+                </span>
+            </div>
+
+            <!-- Quote Block -->
+            <div class="relative mt-8 p-6 glass-card rounded-2xl max-w-2xl mx-auto border-sky-500/20 shadow-2xl">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 px-4 text-sky-400 text-sm">
+                    <i class="fa-solid fa-quote-left"></i>
+                </div>
+                <p class="text-slate-200 italic font-title text-base sm:text-lg leading-relaxed pt-2">
+                    “Không gian định hình nơi chốn. Thời gian định hình diễn biến.<br class="hidden sm:inline"> Không-thời gian kết nối tất cả.”
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+
+        <!-- SECTION I: NỀN TẢNG CỦA HỆ MA PHÁP -->
+        <section id="principles" class="space-y-6">
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-4">
+                <div class="p-2.5 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+                    <i class="fa-solid fa-cubes text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-title font-bold text-slate-100">I. Nền Tảng Của Hệ Ma Pháp</h2>
+                    <p class="text-xs text-slate-400">4 nguyên lý cốt lõi chi phối cơ chế vận hành</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Principle 1 -->
+                <div class="glass-card rounded-xl p-5 relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-400/20 text-sky-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-location-crosshairs"></i>
+                    </div>
+                    <span class="text-xs font-mono text-sky-400 tracking-wider uppercase block mb-1">Nguyên lý 01</span>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Tọa Độ Không Gian</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">Mỗi địa điểm được xác định bằng một hệ tọa độ ma pháp. Cần biết hoặc đánh dấu vị trí để dịch chuyển chính xác.</p>
+                    <div class="text-[11px] text-rose-300/80 bg-rose-950/30 border border-rose-500/20 rounded-md p-2">
+                        <strong>Giới hạn:</strong> Không thể dịch chuyển đến tọa độ chưa xác định hoặc bị kết giới khóa.
+                    </div>
+                </div>
+
+                <!-- Principle 2 -->
+                <div class="glass-card rounded-xl p-5 relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-400/20 text-indigo-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <span class="text-xs font-mono text-indigo-400 tracking-wider uppercase block mb-1">Nguyên lý 02</span>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Nhịp Thời Gian</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">Điều chỉnh tốc độ chuyển động trong một vùng ma pháp cục bộ theo cơ chế giả tưởng.</p>
+                    <div class="text-[11px] text-rose-300/80 bg-rose-950/30 border border-rose-500/20 rounded-md p-2">
+                        <strong>Giới hạn:</strong> Không thể tua ngược lịch sử hoặc dừng thời gian toàn vũ trụ.
+                    </div>
+                </div>
+
+                <!-- Principle 3 -->
+                <div class="glass-card rounded-xl p-5 relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-400/20 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-anchor"></i>
+                    </div>
+                    <span class="text-xs font-mono text-emerald-400 tracking-wider uppercase block mb-1">Nguyên lý 03</span>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Điểm Neo Thời-Không</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">Dấu ấn bạc hoặc tinh thể xanh dùng để định vị, giữ ổn định cổng không gian và giới hạn phạm vi phép.</p>
+                    <div class="text-[11px] text-rose-300/80 bg-rose-950/30 border border-rose-500/20 rounded-md p-2">
+                        <strong>Giới hạn:</strong> Điểm neo có thể bị phá hủy, nhiễu loạn hoặc mất kết nối.
+                    </div>
+                </div>
+
+                <!-- Principle 4 -->
+                <div class="glass-card rounded-xl p-5 relative overflow-hidden group">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-400/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <span class="text-xs font-mono text-amber-400 tracking-wider uppercase block mb-1">Nguyên lý 04</span>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">Ngân Lượng Ma Lực</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">Tiêu hao ma lực tùy theo khoảng cách, thời gian duy trì, phạm vi và số lượng mục tiêu.</p>
+                    <div class="text-[11px] text-rose-300/80 bg-rose-950/30 border border-rose-500/20 rounded-md p-2">
+                        <strong>Giới hạn:</strong> Phép càng phức tạp / thay đổi trạng thái càng nhiều càng tốn ma lực.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scientific Note Banner -->
+            <div class="p-4 rounded-xl glass-card border-slate-700/50 flex items-start gap-3 bg-slate-900/40">
+                <i class="fa-solid fa-circle-info text-sky-400 text-lg mt-0.5"></i>
+                <div class="text-xs text-slate-300 leading-relaxed">
+                    <strong class="text-slate-100">Lưu ý khoa học:</strong> Hệ thống lấy cảm hứng từ thuyết tương đối, hình học không gian và các khái niệm về thời gian. Dịch chuyển tức thời, vùng thời gian ma pháp và tái cấu trúc không-thời gian là những cơ chế giả tưởng.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION II - VI: SPELL LIST WITH INTERACTIVE FILTERING -->
+        <section id="spells" class="space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-title font-bold text-slate-100">Danh Sách Chiêu Thức</h2>
+                        <p class="text-xs text-slate-400">Khám phá 17 ma pháp phân cấp từ D đến S</p>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="flex flex-wrap gap-2" id="tier-filters">
+                    <button data-tier="ALL" class="filter-btn active px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-sky-400/30 bg-sky-500/20 text-sky-200 hover:bg-sky-500/30 transition-all">Tất cả (17)</button>
+                    <button data-tier="D" class="filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-700 bg-slate-800/50 text-slate-300 hover:border-blue-500/50 transition-all">Cấp D (5)</button>
+                    <button data-tier="C" class="filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-700 bg-slate-800/50 text-slate-300 hover:border-emerald-500/50 transition-all">Cấp C (3)</button>
+                    <button data-tier="B" class="filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-700 bg-slate-800/50 text-slate-300 hover:border-amber-500/50 transition-all">Cấp B (3)</button>
+                    <button data-tier="A" class="filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-700 bg-slate-800/50 text-slate-300 hover:border-rose-500/50 transition-all">Cấp A (3)</button>
+                    <button data-tier="S" class="filter-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-700 bg-slate-800/50 text-slate-300 hover:border-purple-500/50 transition-all">Cấp S (3)</button>
+                </div>
+            </div>
+
+            <!-- Spell Grid -->
+            <div id="spells-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Tier D Spells -->
+                <!-- D-01 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="D">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-d">CẤP D-01</span>
+                            <span class="text-xs text-slate-400 italic">Khởi đầu thời-không</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">KHÔNG BỘ</h3>
+                            <p class="text-xs text-sky-400 font-medium mt-0.5">Dịch chuyển không gian</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Đánh dấu một điểm đến trong tầm nhìn rồi dịch chuyển tức thời qua khe không gian ngắn. Tàn ảnh xanh bạc xuất hiện tại vị trí cũ.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Né đòn tấn công nhanh chóng.</li>
+                                    <li>Thay đổi vị trí tức thì.</li>
+                                    <li>Tiếp cận / rút lui an toàn.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Chỉ trong phạm vi ngắn.</li>
+                                    <li>Không thể đến vị trí chưa xác định.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-sky-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-sky-300 italic font-title text-center">
+                            “Không gian khai lộ — một bước vượt ngàn!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D-02 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="D">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-d">CẤP D-02</span>
+                            <span class="text-xs text-slate-400 italic">Khởi đầu thời-không</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">THỜI TỐC</h3>
+                            <p class="text-xs text-sky-400 font-medium mt-0.5">Gia tốc chuyển động</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Tăng tốc chuyển động của chính người dùng trong thời gian ngắn bằng hiệu ứng thời gian ma pháp giả tưởng.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Tăng tốc di chuyển đáng kể.</li>
+                                    <li>Thực hiện liên hoàn động tác.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không tăng tốc phản xạ tư duy.</li>
+                                    <li>Duy trì lâu gây kiệt sức.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-sky-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-sky-300 italic font-title text-center">
+                            “Kim luân chuyển động — thời tốc khai mở!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D-03 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="D">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-d">CẤP D-03</span>
+                            <span class="text-xs text-slate-400 italic">Khởi đầu thời-không</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">NGÂN TINH ĐỊNH VỊ</h3>
+                            <p class="text-xs text-sky-400 font-medium mt-0.5">Định vị & Tạo điểm neo</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Tạo một tinh ấn bạc tại vị trí chọn. Tinh ấn ghi nhận tọa độ ma pháp, giúp cảm nhận hướng và khoảng cách.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Đánh dấu tọa độ quan trọng.</li>
+                                    <li>Làm neo cho phép cấp cao.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Tinh ấn có thể bị phá hủy.</li>
+                                    <li>Không tự tạo cổng dịch chuyển.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-sky-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-sky-300 italic font-title text-center">
+                            “Ngân tinh ghi dấu — tọa độ hiện hình!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D-04 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="D">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-d">CẤP D-04</span>
+                            <span class="text-xs text-slate-400 italic">Khởi đầu thời-không</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">TÀN ẢNH THỜI KHẮC</h3>
+                            <p class="text-xs text-sky-400 font-medium mt-0.5">Ảo ảnh thời gian</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Lưu lại dấu vết hình ảnh của chuyển động vừa diễn ra rồi tái hiện hình ảnh đó trong chốc lát để đánh lạc hướng.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Đánh lạc hướng đối thủ.</li>
+                                    <li>Che giấu hướng di chuyển thực.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không có cơ thể vật chất.</li>
+                                    <li>Không gây sát thương trực tiếp.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-sky-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-sky-300 italic font-title text-center">
+                            “Khoảnh khắc lưu ảnh — quá khứ tái hiện!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D-05 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="D">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-d">CẤP D-05</span>
+                            <span class="text-xs text-slate-400 italic">Khởi đầu thời-không</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">LỆCH QUỸ ĐẠO</h3>
+                            <p class="text-xs text-sky-400 font-medium mt-0.5">Bẻ cong đường đi</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Làm lệch đường bay của một vật thể nhỏ hoặc đòn phép yếu khi chúng tiến vào vùng ảnh hưởng.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Né đòn đánh đơn hướng.</li>
+                                    <li>Đổi hướng đòn tấn công nhỏ.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không xóa bỏ năng lượng đòn đánh.</li>
+                                    <li>Khó chống đòn diện rộng.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-sky-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-sky-300 italic font-title text-center">
+                            “Quỹ đạo đổi chiều — đường đi nghe lệnh!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier C Spells -->
+                <!-- C-01 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="C">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-c">CẤP C-01</span>
+                            <span class="text-xs text-slate-400 italic">Kiểm soát cự ly</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">CỔNG NGÂN HÀ</h3>
+                            <p class="text-xs text-emerald-400 font-medium mt-0.5">Cổng dịch chuyển không gian</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Mở hai cổng không gian liên kết. Đầu cổng thứ hai có thể liên kết với tọa độ Ngân Tinh Định Vị từ trước.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Dịch chuyển tầm xa tốt hơn.</li>
+                                    <li>Đưa cả đồng minh qua cổng.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Hai cổng phải luôn ổn định.</li>
+                                    <li>Càng xa càng tốn ma lực.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-emerald-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-emerald-300 italic font-title text-center">
+                            “Hai đầu ngân hà — không gian nối liền!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- C-02 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="C">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-c">CẤP C-02</span>
+                            <span class="text-xs text-slate-400 italic">Nhịp thời gian</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">THỜI VỰC</h3>
+                            <p class="text-xs text-emerald-400 font-medium mt-0.5">Làm chậm chuyển động cục bộ</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Tạo một vùng ma pháp khiến mọi chuyển động bên trong diễn ra chậm hơn nhiều so với môi trường bên ngoài.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Hạn chế tốc độ tiếp cận kẻ thù.</li>
+                                    <li>Tạo thời gian chuẩn bị/sơ tán.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không dừng thời gian vĩnh viễn.</li>
+                                    <li>Kẻ thù ma lực mạnh có thể kháng.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-emerald-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-emerald-300 italic font-title text-center">
+                            “Thời lưu ngưng nhịp — vạn vật chậm bước!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- C-03 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="C">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-c">CẤP C-03</span>
+                            <span class="text-xs text-slate-400 italic">Cấu trúc không gian</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">KHÔNG GIAN GẤP KHÚC</h3>
+                            <p class="text-xs text-emerald-400 font-medium mt-0.5">Bẻ cong cấu trúc không gian</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Bẻ cong đường đi của không gian, khiến vật thể hoặc đòn phép bay qua vùng này bị đổi hướng đột ngột.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Tạo đường tấn công bất ngờ.</li>
+                                    <li>Đưa đòn đánh vòng qua vật cản.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Chỉ trong phạm vi xác định.</li>
+                                    <li>Cần duy trì cấu trúc ổn định.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-emerald-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-emerald-300 italic font-title text-center">
+                            “Thiên địa uốn mình — vạn lộ đổi chiều!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier B Spells -->
+                <!-- B-01 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="B">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-b">CẤP B-01</span>
+                            <span class="text-xs text-slate-400 italic">Kiểm soát chiến trường</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">THIÊN LA TỌA ĐỘ</h3>
+                            <p class="text-xs text-amber-400 font-medium mt-0.5">Mạng lưới định vị toàn cảnh</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Trải rộng mạng lưới tọa độ ma pháp khắp chiến trường. Người dùng có thể cảm nhận chuyển động và dịch chuyển linh hoạt giữa các điểm.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Nắm bắt chuyển động diện rộng.</li>
+                                    <li>Thối động di chuyển chiến thuật.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không nhìn xuyên mọi vật cản.</li>
+                                    <li>Dễ bị kết giới địch gây nhiễu.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-amber-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-amber-300 italic font-title text-center">
+                            “Thiên la trải rộng — vạn điểm quy về!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B-02 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="B">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-b">CẤP B-02</span>
+                            <span class="text-xs text-slate-400 italic">Kiểm soát chiến trường</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">THỜI KHẮC PHÂN VÙNG</h3>
+                            <p class="text-xs text-amber-400 font-medium mt-0.5">Đa nhịp thời gian song song</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Chia khu vực thành nhiều vùng với nhịp thời gian khác nhau (ví dụ: một vùng làm chậm, vùng khác giữ nguyên nhịp độ).
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Điều phối nhịp độ chiến trận.</li>
+                                    <li>Kết hợp đa hiệu ứng chiến thuật.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Số vùng giới hạn, khó kiểm soát.</li>
+                                    <li>Ranh giới phức tạp tốn ma lực.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-amber-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-amber-300 italic font-title text-center">
+                            “Vạn vực phân thời — mỗi miền một nhịp!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- B-03 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="B">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-b">CẤP B-03</span>
+                            <span class="text-xs text-slate-400 italic">Kiểm soát chiến trường</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">LIÊN KẾT THỜI-KHÔNG</h3>
+                            <p class="text-xs text-amber-400 font-medium mt-0.5">Kết nối mạng lưới điểm neo</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Nối các điểm neo thành hệ thống liên hoàn, cho phép truyền tín hiệu ma lực và duy trì các cổng phụ đồng bộ.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Hỗ trợ di chuyển nhóm lớn.</li>
+                                    <li>Giúp phép cấp cao kích hoạt.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Nút trung tâm hỏng = Mạng sụp.</li>
+                                    <li>Cần ma lực duy trì liên tục.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-amber-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-amber-300 italic font-title text-center">
+                            “Vạn điểm giao hội — thời không kết thành mạng!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier A Spells -->
+                <!-- A-01 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="A">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-a">CẤP A-01</span>
+                            <span class="text-xs text-slate-400 italic">Làm chủ cấu trúc</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">MÊ CUNG VÔ CỰ</h3>
+                            <p class="text-xs text-rose-400 font-medium mt-0.5">Mê cung không gian nhiều lớp</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Kiến tạo không gian gồm nhiều tầng gấp khúc và lối đi xáo trộn, khiến kẻ thù hoàn toàn mất phương hướng.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Phân tách đội hình địch.</li>
+                                    <li>Bảo vệ hoàn hảo vùng trọng yếu.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Người dùng phải nắm rõ cấu trúc.</li>
+                                    <li>Tốn cực kỳ nhiều ma lực.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-rose-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-rose-300 italic font-title text-center">
+                            “Vô cự khai tầng — vạn lộ nhập mê cung!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A-02 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="A">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-a">CẤP A-02</span>
+                            <span class="text-xs text-slate-400 italic">Làm chủ cấu trúc</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">THẦN THỂ THỜI KHÔNG</h3>
+                            <p class="text-xs text-rose-400 font-medium mt-0.5">Giáp gia tốc & Đọc quỹ đạo</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Bao bọc cơ thể bằng giáp thời-không, cho phép dịch chuyển ngắn liên tục và đọc trước quỹ đạo đòn đánh.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Tăng tối đa khả năng né & thủ.</li>
+                                    <li>Cận chiến siêu linh hoạt.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không làm thể xác bất tử.</li>
+                                    <li>Không thể duy trì dài lâu.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-rose-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-rose-300 italic font-title text-center">
+                            “Thân hợp thời không — vạn tượng quy nhất!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A-03 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between" data-tier="A">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-a">CẤP A-03</span>
+                            <span class="text-xs text-slate-400 italic">Làm chủ cấu trúc</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">ĐỊNH MỆNH THỜI KHẮC</h3>
+                            <p class="text-xs text-rose-400 font-medium mt-0.5">Trì hoãn & Ổn định trạng thái</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Đánh dấu khoảnh khắc, cho phép trì hoãn hiệu ứng ma pháp đang giội tới hoặc giữ kết giới khỏi sụp đổ ngay.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Ngắt nhịp niệm phép của địch.</li>
+                                    <li>Giữ cổng/kết giới cứu nguy.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không xóa được sự kiện đã rồi.</li>
+                                    <li>Dễ bị phá bởi ma lực quá vượt trội.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-rose-950/20 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-rose-300 italic font-title text-center">
+                            “Khoảnh khắc định danh — thời khắc đứng yên!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier S Spells -->
+                <!-- S-01 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between border-purple-500/30" data-tier="S">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-s">CẤP S-01</span>
+                            <span class="text-xs text-purple-300 italic">Thống trị giới hạn</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">VẠN TINH THỜI KHÔNG</h3>
+                            <p class="text-xs text-purple-400 font-medium mt-0.5">Kết giới đại không gian</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Trải kết giới rộng lớn với hàng trăm điểm neo. Cho phép kiểm soát toàn bộ lối đi, làm chậm và mở vô số portal.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Kiểm soát chiến trường diện rộng.</li>
+                                    <li>Kết hợp đa dạng hiệu ứng cao cấp.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Mỗi điểm neo tiêu tốn ma lực.</li>
+                                    <li>Mất điểm neo sẽ làm suy yếu.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-purple-950/30 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-purple-300 italic font-title text-center">
+                            “Vạn tinh kết giới — thiên địa quy về một!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- S-02 -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between border-purple-500/30" data-tier="S">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-s">CẤP S-02</span>
+                            <span class="text-xs text-purple-300 italic">Thống trị giới hạn</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-title font-bold text-slate-100">NGHỊCH LƯU THỜI KHẮC</h3>
+                            <p class="text-xs text-purple-400 font-medium mt-0.5">Tái lập trạng thái vật thể</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Tái lập trạng thái cũ của vật thể phi sinh học hoặc phép thuật trong thời gian ngắn nếu đã được lưu dữ liệu.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-emerald-400 block mb-1"><i class="fa-solid fa-circle-check mr-1"></i> Điểm mạnh:</strong>
+                                <ul class="list-disc list-inside text-slate-300 space-y-0.5 pl-1">
+                                    <li>Phục hồi kết cấu vỡ tan tức thì.</li>
+                                    <li>Sửa chữa hư hỏng ma pháp.</li>
+                                </ul>
+                            </div>
+                            <div class="text-xs pt-1">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Giới hạn:</strong>
+                                <ul class="list-disc list-inside text-slate-400 space-y-0.5 pl-1">
+                                    <li>Không hồi sinh người chết.</li>
+                                    <li>Không đảo ngược lịch sử toàn cục.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-purple-950/30 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-purple-300 italic font-title text-center">
+                            “Dòng chảy hồi quy — tái hiện thời khắc!”
+                        </div>
+                    </div>
+                </div>
+
+                <!-- S-03 Ultimate -->
+                <div class="spell-card glass-card rounded-2xl p-6 relative flex flex-col justify-between border-sky-400/50 shadow-[0_0_35px_rgba(56,189,248,0.15)] col-span-1 md:col-span-2 lg:col-span-1" data-tier="S">
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold font-mono badge-s bg-sky-500/20 border-sky-400 text-sky-200">MA PHÁP TỐI THƯỢNG</span>
+                            <span class="text-xs text-sky-300 italic">Cấp S-03</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-title font-extrabold magic-text">TÁI CẤU TRÚC KHÔNG-THỜI GIAN</h3>
+                            <p class="text-xs text-sky-400 font-medium mt-0.5">Thống trị & Tái lập trật tự</p>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Triển khai toàn bộ mạng lưới điểm neo, hợp nhất mọi lớp gấp khúc và vùng thời gian thành một cấu trúc đồng nhất.
+                        </p>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="text-xs">
+                                <strong class="text-sky-300 block mb-1"><i class="fa-solid fa-star mr-1"></i> 3 Hiệu ứng Tối thượng:</strong>
+                                <ol class="list-decimal list-inside text-slate-300 space-y-1 pl-1">
+                                    <li><span class="font-semibold text-slate-100">Tái Định Vị:</span> Xáo trộn lại mọi đường đi & tọa độ.</li>
+                                    <li><span class="font-semibold text-slate-100">Tái Lập Nhịp:</span> Điều khiển nhịp thời gian mọi vùng.</li>
+                                    <li><span class="font-semibold text-slate-100">Tái Cấu Trúc:</span> Dựng lại toàn bộ điểm neo/cổng.</li>
+                                </ol>
+                            </div>
+                            <div class="text-xs pt-2">
+                                <strong class="text-rose-400 block mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Tác dụng phụ:</strong>
+                                <p class="text-slate-400 pl-1">Sau khi dùng, Grimoire có thể đi vào trạng thái ngủ đông và tạm khóa các chiêu thức cấp cao.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 bg-sky-950/40 -mx-6 -mb-6 p-4 rounded-b-2xl">
+                        <div class="text-xs text-sky-200 italic font-title text-center leading-relaxed">
+                            “Thiên địa phân định — thời khắc luân chuyển!<br>
+                            Không gian tái lập — vạn tượng quy nguyên!<br>
+                            <strong class="text-sky-400 not-italic tracking-wider uppercase font-bold text-sm block mt-1">TÁI CẤU TRÚC KHÔNG-THỜI GIAN!”</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION VII: SUMMARY & CLASSIFICATION TABLE -->
+        <section id="summary" class="space-y-6 pt-6">
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-4">
+                <div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                    <i class="fa-solid fa-list-check text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-title font-bold text-slate-100">VII. Tổng Hợp Phân Loại 17 Chiêu Thức</h2>
+                    <p class="text-xs text-slate-400">Bảng thống kê toàn bộ hệ thống ma pháp</p>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 text-slate-200 font-title uppercase tracking-wider border-b border-slate-800">
+                            <tr>
+                                <th class="p-4">Cấp Độ</th>
+                                <th class="p-4">Số Lượng</th>
+                                <th class="p-4">Vai Trò Chính</th>
+                                <th class="p-4">Danh Sách Chiêu Thức</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60">
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="p-4 font-bold text-blue-400"><span class="badge-d px-2 py-0.5 rounded">Cấp D</span></td>
+                                <td class="p-4 font-mono">5 chiêu</td>
+                                <td class="p-4">Di chuyển cơ bản, định vị, né tránh, đánh lạc hướng</td>
+                                <td class="p-4 text-slate-200">D-01 Không Bộ, D-02 Thời Tốc, D-03 Ngân Tinh Định Vị, D-04 Tàn Ảnh Thời Khắc, D-05 Lệch Quỹ Đạo</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="p-4 font-bold text-emerald-400"><span class="badge-c px-2 py-0.5 rounded">Cấp C</span></td>
+                                <td class="p-4 font-mono">3 chiêu</td>
+                                <td class="p-4">Mở cổng dịch chuyển, làm chậm, bẻ cong đường đi</td>
+                                <td class="p-4 text-slate-200">C-01 Cổng Ngân Hà, C-02 Thời Vực, C-03 Không Gian Gấp Khúc</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="p-4 font-bold text-amber-400"><span class="badge-b px-2 py-0.5 rounded">Cấp B</span></td>
+                                <td class="p-4 font-mono">3 chiêu</td>
+                                <td class="p-4">Mở rộng kiểm soát, chia vùng thời gian, kết nối điểm neo</td>
+                                <td class="p-4 text-slate-200">B-01 Thiên La Tọa Độ, B-02 Thời Khắc Phân Vùng, B-03 Liên Kết Thời-Không</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="p-4 font-bold text-rose-400"><span class="badge-a px-2 py-0.5 rounded">Cấp A</span></td>
+                                <td class="p-4 font-mono">3 chiêu</td>
+                                <td class="p-4">Không gian nhiều lớp, cường hóa bản thân, ổn định trạng thái</td>
+                                <td class="p-4 text-slate-200">A-01 Mê Cung Vô Cự, A-02 Thần Thể Thời Không, A-03 Định Mệnh Thời Khắc</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/30 transition-colors">
+                                <td class="p-4 font-bold text-purple-400"><span class="badge-s px-2 py-0.5 rounded">Cấp S</span></td>
+                                <td class="p-4 font-mono">3 chiêu</td>
+                                <td class="p-4">Khống chế diện rộng, tái lập trạng thái, tái cấu trúc không-thời gian</td>
+                                <td class="p-4 text-slate-200">S-01 Vạn Tinh Thời Không, S-02 Nghịch Lưu Thời Khắc, S-03 Tái Cấu Trúc Không-Thời Gian</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-4 bg-slate-900/60 text-center text-xs text-slate-400 font-mono border-t border-slate-800">
+                    TỔNG CỘNG: 17 CHIÊU THỨC · 5 CẤP ĐỘ · 4 NGUYÊN LÝ NỀN TẢNG
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-slate-800/80 py-8 text-center text-xs text-slate-500 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-title tracking-widest text-slate-400">KHÔNG THỜI VẠN TƯỢNG — GRIMOIRE OF SPACETIME</p>
+            <p>© Magic System Codex · Designed with Cosmic Visuals</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Script -->
+    <script>
+        // Generate Starfield
+        function createStarfield() {
+            const container = document.getElementById('stars-container');
+            const starCount = 120;
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                
+                // Animation properties
+                star.style.setProperty('--duration', `${2 + Math.random() * 4}s`);
+                star.style.setProperty('--delay', `${Math.random() * 3}s`);
+                
+                container.appendChild(star);
+            }
+        }
+
+        // Tier Filtering Logic
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const spellCards = document.querySelectorAll('.spell-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedTier = button.getAttribute('data-tier');
+
+                    // Update active button state
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-sky-500/20', 'text-sky-200', 'border-sky-400/30');
+                        btn.classList.add('bg-slate-800/50', 'text-slate-300', 'border-slate-700');
+                    });
+
+                    button.classList.remove('bg-slate-800/50', 'text-slate-300', 'border-slate-700');
+                    button.classList.add('bg-sky-500/20', 'text-sky-200', 'border-sky-400/30');
+
+                    // Filter cards
+                    spellCards.forEach(card => {
+                        const cardTier = card.getAttribute('data-tier');
+                        if (selectedTier === 'ALL' || cardTier === selectedTier) {
+                            card.style.display = 'flex';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'scale(1)';
+                            }, 50);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 200);
+                        }
+                    });
+                });
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            createStarfield();
+            setupFilters();
+        });
+    </script>
+</body>
+</html>
